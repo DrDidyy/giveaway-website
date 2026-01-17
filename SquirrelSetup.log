@@ -1,0 +1,90 @@
+﻿<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Giveaway Portal</title>
+<style>
+body { font-family: Arial, sans-serif; margin:0; background:#0f0f14; color:#fff; }
+header { padding:40px; text-align:center; background:#1b1b25; }
+h1 { font-size:42px; margin-bottom:10px; }
+section { padding:40px; max-width:900px; margin:auto; }
+.card { background:#1e1e2e; padding:20px; border-radius:12px; margin-bottom:20px; }
+input, button { width:100%; padding:12px; margin-top:10px; border-radius:8px; border:none; }
+button { background:#ff6b00; color:white; font-size:16px; cursor:pointer; }
+table { width:100%; border-collapse:collapse; }
+th, td { padding:10px; border-bottom:1px solid #333; }
+.hidden { display:none; }
+</style>
+</head>
+<body>
+
+
+<header>
+<h1>Giveaway Plattform</h1>
+<p>Trage dich ein, um an Giveaways teilzunehmen</p>
+</header>
+
+
+<section class="card">
+<h2>Teilnahme</h2>
+<input id="username" placeholder="Benutzername" />
+<input id="email" placeholder="E-Mail" />
+<button onclick="saveEntry()">Teilnehmen</button>
+<p id="msg"></p>
+</section>
+
+
+<section class="card">
+<h2>Admin Login</h2>
+<input id="adminUser" placeholder="Admin Benutzername" />
+<input id="adminPass" type="password" placeholder="Passwort" />
+<button onclick="adminLogin()">Login</button>
+</section>
+
+
+<section id="adminPanel" class="card hidden">
+<h2>Admin Dashboard</h2>
+<table>
+<thead>
+<tr><th>Benutzername</th><th>E-Mail</th></tr>
+</thead>
+<tbody id="data"></tbody>
+</table>
+</section>
+
+
+<script>
+const ADMIN_USER = "admin";
+const ADMIN_PASS = "admin123";
+
+
+function saveEntry() {
+const u = username.value;
+const e = email.value;
+if (!u || !e) return;
+const list = JSON.parse(localStorage.getItem("entries") || "[]");
+list.push({u,e});
+localStorage.setItem("entries", JSON.stringify(list));
+msg.innerText = "Erfolgreich eingetragen!";
+username.value = email.value = "";
+}
+
+
+function adminLogin() {
+if (adminUser.value === ADMIN_USER && adminPass.value === ADMIN_PASS) {
+adminPanel.classList.remove("hidden");
+loadData();
+}
+}
+
+
+function loadData() {
+const list = JSON.parse(localStorage.getItem("entries") || "[]");
+data.innerHTML = list.map(x => `<tr><td>${x.u}</td><td>${x.e}</td></tr>`).join("");
+}
+</script>
+
+
+</body>
+</html>
